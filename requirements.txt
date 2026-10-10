@@ -1,0 +1,5 @@
+Django>=6.1,<6.2
+requests
+numpy
+scipy
+python-dotenv

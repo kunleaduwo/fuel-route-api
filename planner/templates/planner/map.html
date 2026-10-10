@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Fuel Route Planner</title>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+body{margin:0;font-family:system-ui,sans-serif}
+#bar{display:flex;gap:8px;padding:10px;background:#0f172a;color:#fff;flex-wrap:wrap;align-items:center}
+#bar input{padding:7px;border-radius:6px;border:0;min-width:200px} #bar button{padding:7px 14px;border:0;border-radius:6px;background:#22c55e;font-weight:600;cursor:pointer}
+#summary{padding:8px 12px;background:#f1f5f9;font-size:14px} #map{height:calc(100vh - 100px)}
+</style></head><body>
+<div id="bar"><b>Fuel Route Planner</b>
+<input id="start" value="Los Angeles, CA"><input id="finish" value="New York, NY"><button onclick="go()">Plan route</button></div>
+<div id="summary">Enter two US locations ("City, ST") and press Plan route.</div><div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map').setView([39.5,-98.35],4);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Tiles © Esri'}).addTo(map);
+let layer=L.layerGroup().addTo(map);
+async function go(){
+  const s=document.getElementById('summary'); s.textContent='Planning…'; layer.clearLayers();
+  const q=new URLSearchParams({start:start.value,finish:finish.value});
+  const r=await fetch('/api/route/?'+q); const d=await r.json();
+  if(!r.ok){s.textContent='Error: '+d.error;return;}
+  const line=L.geoJSON(d.route_geojson,{style:{color:'#2563eb',weight:4}}).addTo(layer); map.fitBounds(line.getBounds());
+  L.marker([d.start.lat,d.start.lng]).addTo(layer).bindPopup('Start: '+d.start.label);
+  L.marker([d.finish.lat,d.finish.lng]).addTo(layer).bindPopup('Finish: '+d.finish.label);
+  d.fuel_stops.forEach((f,i)=>L.circleMarker([f.lat,f.lng],{radius:9,color:'#dc2626',fillOpacity:.9}).addTo(layer)
+    .bindPopup(`<b>Stop ${i+1}: ${f.name}</b><br>${f.city}, ${f.state}<br>Mile ${f.mile_marker}<br>$${f.price_per_gallon}/gal × ${f.gallons_purchased} gal = $${f.cost}`));
+  s.textContent=`${d.distance_miles} mi · ${d.duration_hours} h · ${d.fuel_stops.length} fuel stops · total fuel $${d.total_fuel_cost} · ${d.elapsed_ms} ms`;
+}
+</script></body></html>
