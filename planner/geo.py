@@ -1,5 +1,4 @@
 """Offline 'geocoding': turns "Dallas, TX" (or "32.77,-96.79") into coordinates.
-
 Doing this locally means the only external call per request is the routing call.
 """
 import csv
