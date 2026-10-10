@@ -15,6 +15,7 @@ MILES_PER_DEG_LAT = 69.0
 GRID_MILES = 0.5
 
 
+
 def _densify(coords, total_miles):
     """Resample the route every GRID_MILES so nearest-point maths is accurate on long straights."""
     lat0 = np.radians(coords[:, 0].mean())
