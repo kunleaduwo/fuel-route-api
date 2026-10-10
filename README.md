@@ -32,7 +32,7 @@ Free routing key at https://openrouteservice.org/dev/#/signup.
 The response includes the total distance and drive time, each fuel stop in order (station, price per gallon, gallons bought, cost and where it sits along the route), the total fuel cost, and the route as GeoJSON so a map can draw it. Bad input returns a clear 400 error instead of crashing.
 
 
-## Assumptions and trade-offs
+## Assumptions 
 
 - The truck **starts with a full tank**, and the total cost covers fuel bought at the listed stops. So a trip under 500 miles has no stops and costs $0.
 - The CSV has no coordinates, so station locations are **city-level**. That's why I match stations within 10 miles of the route.
