@@ -17,6 +17,7 @@ class Stations:
     lng: np.ndarray
 
 
+
 @lru_cache(maxsize=1)
 def load_stations() -> Stations:
     """Loaded once per process, so requests never touch the disk or a database."""
