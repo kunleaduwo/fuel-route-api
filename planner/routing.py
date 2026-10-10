@@ -27,6 +27,8 @@ def _ors(start, finish):
     return feat["geometry"]["coordinates"], feat["properties"]["summary"]
 
 
+
+
 def _osrm(start, finish):
     url = f"{settings.OSRM_BASE_URL}/route/v1/driving/{start[1]},{start[0]};{finish[1]},{finish[0]}"
     r = requests.get(url, params={"overview": "full", "geometries": "geojson"}, timeout=30)
