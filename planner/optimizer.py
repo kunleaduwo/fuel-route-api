@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 
+
 class NoFeasiblePlan(Exception):
     pass
-
 
 @dataclass
 class Stop:
