@@ -10,6 +10,7 @@ from .routing import RoutingError
 from .service import plan_trip
 
 
+
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def route_api(request):
